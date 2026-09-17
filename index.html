@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>AWTRIX Birthday Editor</title>
+  <style>
+    :root{color-scheme:dark;--bg:#111315;--card:#1d2023;--line:#34383d;--text:#f4f4f4;--muted:#aeb4ba;--accent:#f5a45b;--danger:#ff6b6b}
+    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px system-ui,sans-serif}main{max-width:920px;margin:auto;padding:24px}
+    h1{margin:0 0 8px}.lead{color:var(--muted);margin:0 0 24px}.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;margin-bottom:18px}
+    .grid{display:grid;grid-template-columns:2fr 1fr 1fr 1.2fr auto;gap:10px;align-items:end}label{display:grid;gap:6px;color:var(--muted);font-size:14px}
+    input,button{font:inherit;border-radius:10px;border:1px solid var(--line);padding:11px 12px}input{background:#121416;color:var(--text);min-width:0}button{background:#2a2e32;color:var(--text);cursor:pointer}button.primary{background:var(--accent);color:#151515;border-color:var(--accent);font-weight:700}button.danger{color:var(--danger)}button:hover{filter:brightness(1.1)}
+    .toolbar{display:flex;flex-wrap:wrap;gap:10px}.file{position:relative;overflow:hidden}.file input{position:absolute;inset:0;opacity:0;cursor:pointer}
+    table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:11px 8px;border-bottom:1px solid var(--line)}th{color:var(--muted);font-size:13px}.actions{display:flex;gap:6px}
+    .empty{text-align:center;color:var(--muted);padding:28px}.status{min-height:24px;color:var(--muted);margin-top:10px}.error{color:var(--danger)}code{background:#121416;padding:2px 6px;border-radius:5px}
+    @media(max-width:720px){main{padding:14px}.grid{grid-template-columns:1fr 1fr}.grid label:first-child{grid-column:1/-1}.grid button{grid-column:1/-1}table,thead,tbody,tr,th,td{display:block}thead{display:none}tr{padding:10px 0;border-bottom:1px solid var(--line)}td{border:0;padding:4px 0}.actions{margin-top:8px}}
+  </style>
+</head>
+<body>
+<main>
+  <h1>AWTRIX Birthday Editor</h1>
+  <p class="lead">Geburtstage lokal verwalten und als fertiges AWTRIX-Modul exportieren – ohne Server oder Cloud.</p>
+
+  <section class="card">
+    <form id="form" class="grid">
+      <label>Name<input id="name" maxlength="60" required placeholder="Roy"></label>
+      <label>Tag<input id="day" type="number" min="1" max="31" required></label>
+      <label>Monat<input id="month" type="number" min="1" max="12" required></label>
+      <label>Jahr<input id="year" type="number" min="1900" max="2200" required></label>
+      <button class="primary" type="submit" id="save">Hinzufügen</button>
+    </form>
+    <div id="formStatus" class="status"></div>
+  </section>
+
+  <section class="card">
+    <div class="toolbar">
+      <label class="file"><button type="button">JSON importieren</button><input id="jsonImport" type="file" accept=".json,application/json"></label>
+      <label class="file"><button type="button">CSV importieren</button><input id="csvImport" type="file" accept=".csv,text/csv"></label>
+      <button type="button" class="primary" id="moduleDownload">AWTRIX-Modul herunterladen</button>
+      <button type="button" id="jsonDownload">JSON-Sicherung herunterladen</button>
+      <button type="button" class="danger" id="clear">Alle löschen</button>
+    </div>
+    <div id="status" class="status"></div>
+  </section>
+
+  <section class="card">
+    <table>
+      <thead><tr><th>Name</th><th>Geburtsdatum</th><th>Nächstes Alter</th><th>Aktionen</th></tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
+    <div id="empty" class="empty">Noch keine Geburtstage eingetragen.</div>
+  </section>
+
+  <section class="card">
+    <h2>Direkt an AWTRIX senden</h2>
+    <p>Version 4.6.1 · Lokal im selben Netzwerk. Übertragen ersetzt die komplette Geburtstagsliste auf der Uhr. JSON-Sicherungen bitte aufbewahren.</p>
+    <div class="toolbar">
+      <label>AWTRIX-Adresse<input id="deviceHost" placeholder="192.168.10.50"></label>
+      <label>App-Skriptname<input id="appName" value="geburtstage"></label>
+      <label>Benutzer (optional)<input id="deviceUser" autocomplete="off"></label>
+      <label>Passwort (optional)<input id="devicePass" type="password" autocomplete="off"></label>
+    </div>
+    <p>Der Skriptname ist der Name unter „Skripte“, nicht der Anzeigename „Birthdays“. Zugangsdaten werden nicht gespeichert. HTTP überträgt sie unverschlüsselt: nur im vertrauenswürdigen Heimnetz verwenden.</p>
+    <div class="toolbar">
+      <label style="display:flex;align-items:center;gap:8px"><input id="backupBeforeSend" type="checkbox">Vor Übertragung Backup herunterladen</label>
+      <button id="testDevice" type="button">Verbindung testen</button>
+      <button id="sendDevice" type="button" class="primary">An AWTRIX übertragen</button>
+    </div>
+    <div id="deviceStatus" class="status" role="status" aria-live="polite"></div>
+    <p>Bei Browser-/CORS-Sperren keine Sicherheitseinstellungen deaktivieren. Als Rückfalllösung bleibt „AWTRIX-Modul herunterladen“ und Einfügen unter Skripte → Module → birthday_data.</p>
+  </section>
+</main>
+<script>
+(() => {
+  const key = 'awtrix-birthdays-v1';
+  let entries = [];
+  let editIndex = -1;
+  const $ = id => document.getElementById(id);
+  const validDate = (y,m,d) => { const x=new Date(y,m-1,d); return x.getFullYear()===y&&x.getMonth()===m-1&&x.getDate()===d; };
+  const nextInfo = ([,y,m,d]) => { const n=new Date(), thisYear=n.getFullYear(); let next=new Date(thisYear,m-1,d); if(next < new Date(n.getFullYear(),n.getMonth(),n.getDate())) next=new Date(thisYear+1,m-1,d); return {date:next,age:next.getFullYear()-y}; };
+  const compact = () => JSON.stringify(entries);
+  const persist = () => localStorage.setItem(key, compact());
+  const message = (text,error=false) => { $('status').textContent=text; $('status').className='status'+(error?' error':''); };
+  const downloadFile = (name,text,type) => { const blob=new Blob([text],{type});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();URL.revokeObjectURL(a.href); };
+  const moduleText = () => {
+    const rows=entries.map(e=>'  ['+JSON.stringify(e[0])+', '+e[1]+', '+e[2]+', '+e[3]+']').join(',\n');
+    return '# @module birthday_data\n# @desc Birthday data generated by AWTRIX Birthday Editor\n# @version 1.0\n\nvar data = module("birthday_data")\ndata.entries = [\n'+rows+'\n]\nreturn data\n';
+  };
+
+  const deviceMessage = (text,error=false) => {
+    $('deviceStatus').textContent=text;
+    $('deviceStatus').className='status'+(error?' error':'');
+  };
+  function connection(){
+    let host=$('deviceHost').value.trim();
+    if(!host) throw new Error('Bitte die AWTRIX-Adresse eingeben.');
+    const url=new URL(host.includes('://')?host:'http://'+host);
+    if(!['http:','https:'].includes(url.protocol)||url.username||url.password||url.pathname!=='/'||url.search||url.hash)
+      throw new Error('Nur Adresse und optional Port eingeben, ohne Pfad oder Zugangsdaten.');
+    const app=$('appName').value.trim();
+    if(!/^[A-Za-z0-9_-]{1,32}$/.test(app)||app==='birthday_data') throw new Error('Bitte den Namen des Geburtstags-App-Skripts eingeben (nicht birthday_data).');
+    const headers={};
+    if($('deviceUser').value||$('devicePass').value){
+      const bytes=new TextEncoder().encode($('deviceUser').value+':'+$('devicePass').value);
+      headers.Authorization='Basic '+btoa(Array.from(bytes,b=>String.fromCharCode(b)).join(''));
+    }
+    try{localStorage.setItem('awtrix-birthday-connection',JSON.stringify({host:url.origin,app}));}catch{}
+    return {base:url.origin,app,headers};
+  }
+  async function request(c,path,method='GET',body){
+    const controller=new AbortController();const timeout=setTimeout(()=>controller.abort(),15000);
+    try{
+      const response=await fetch(c.base+path,{method,body,headers:{...c.headers,...(body!==undefined?{'Content-Type':'text/plain;charset=UTF-8'}:{})},signal:controller.signal,cache:'no-store',credentials:'omit',redirect:'error'});
+      const text=await response.text();let json;try{json=JSON.parse(text);}catch{}
+      if(!response.ok) throw new Error('HTTP '+response.status+': '+(json?.error?.message||'AWTRIX hat die Anfrage abgelehnt.'));
+      if(method==='PUT'&&(json?.ok!==true||json.error)) throw new Error('Gespeichert möglicherweise mit Fehler: '+(json?.error?.message||JSON.stringify(json?.error)||'Unerwartete Antwort.'));
+      return {text,json};
+    }catch(e){
+      if(e.name==='AbortError') throw new Error('Zeitüberschreitung. Bei einer Übertragung ist der Speicherstatus unklar; auf AWTRIX prüfen.');
+      if(e instanceof TypeError) throw new Error('Keine lesbare Antwort: Adresse/Netzwerk, Browserfreigabe für lokales Netzwerk, CORS oder HTTPS/HTTP-Sperre prüfen. Bei Übertragung ist der Speicherstatus unklar.');
+      throw e;
+    }finally{clearTimeout(timeout);}
+  }
+  async function inspectDevice(c){
+    const device=(await request(c,'/api/v1/device')).json;
+    if(!device||typeof device.version!=='string') throw new Error('Keine gültige AWTRIX-Geräteantwort.');
+    if(device.scriptingRunning===false) throw new Error('Skriptausführung ist auf AWTRIX ausgeschaltet.');
+    const source=(await request(c,'/api/v1/apps/script/'+encodeURIComponent(c.app))).text;
+    if(!/^\s*import\s+birthday_data\b/m.test(source)) throw new Error('Dieses App-Skript importiert birthday_data nicht. Bitte Skriptname/Version prüfen.');
+    const old=(await request(c,'/api/v1/apps/script/birthday_data')).text;
+    if(!/^#\s*@module\s+birthday_data\b/m.test(old)) throw new Error('birthday_data ist kein passendes Datenmodul. Bitte einmalig korrekt installieren.');
+    return {device,source,old};
+  }
+  async function deviceAction(send){
+    $('testDevice').disabled=$('sendDevice').disabled=true;let stage='Prüfung';
+    try{
+      const c=connection();deviceMessage('Verbindung und installierte Skripte prüfen …');
+      const current=await inspectDevice(c);
+      if(!send){deviceMessage('AWTRIX '+current.device.version+' erreichbar; App und Modul gefunden. Schreibzugriff/CORS für PUT wird erst beim Übertragen geprüft.');return;}
+      if(!confirm(entries.length+' Geburtstage an '+c.base+' übertragen? Die dortige Liste wird vollständig ersetzt; '+c.app+' wird neu geladen.'))return;
+      const source=moduleText();
+      if($('backupBeforeSend').checked) downloadFile('birthday_data-backup-'+new Date().toISOString().replace(/[:.]/g,'-')+'.berry',current.old,'text/plain');
+      stage='Modulübertragung';deviceMessage('Datenmodul übertragen …');
+      await request(c,'/api/v1/apps/script/birthday_data','PUT',source);
+      stage='Rücklesen';
+      if((await request(c,'/api/v1/apps/script/birthday_data')).text!==source) throw new Error('Gespeicherter Modulinhalt stimmt nicht mit der gesendeten Liste überein.');
+      stage='App neu laden (Datenmodul bereits gespeichert)';deviceMessage('Modul geprüft. Geburtstags-App neu laden …');
+      await request(c,'/api/v1/apps/script/'+encodeURIComponent(c.app),'PUT',current.source);
+      deviceMessage(entries.length+' Geburtstage gespeichert und App neu geladen.');
+    }catch(e){deviceMessage(stage+': '+e.message,true);}
+    finally{$('testDevice').disabled=$('sendDevice').disabled=false;}
+  }
+  $('testDevice').onclick=()=>deviceAction(false);
+  $('sendDevice').onclick=()=>deviceAction(true);
+  try{$('backupBeforeSend').checked=localStorage.getItem('awtrix-birthday-auto-backup')==='true';}catch{}
+  $('backupBeforeSend').onchange=()=>{try{localStorage.setItem('awtrix-birthday-auto-backup',String($('backupBeforeSend').checked));}catch{}};
+  try{const c=JSON.parse(localStorage.getItem('awtrix-birthday-connection')||'null');if(c){$('deviceHost').value=c.host;$('appName').value=c.app;}}catch{}
+
+  function render(){
+    entries.sort((a,b)=>nextInfo(a).date-nextInfo(b).date || a[0].localeCompare(b[0]));
+    const rows=$('rows'); rows.textContent=''; $('empty').hidden=entries.length>0;
+    entries.forEach((e,i)=>{
+      const tr=document.createElement('tr');
+      const info=nextInfo(e);
+      const cells=[e[0],String(e[3]).padStart(2,'0')+'.'+String(e[2]).padStart(2,'0')+'.'+e[1],info.age];
+      cells.forEach(v=>{const td=document.createElement('td');td.textContent=v;tr.appendChild(td);});
+      const td=document.createElement('td');td.className='actions';
+      const edit=document.createElement('button');edit.textContent='Bearbeiten';edit.onclick=()=>startEdit(i);
+      const del=document.createElement('button');del.textContent='Löschen';del.className='danger';del.onclick=()=>{entries.splice(i,1);persist();render();};
+      td.append(edit,del);tr.appendChild(td);rows.appendChild(tr);
+    });
+    persist();
+  }
+
+  function startEdit(i){
+    editIndex=i; const e=entries[i]; $('name').value=e[0];$('year').value=e[1];$('month').value=e[2];$('day').value=e[3];$('save').textContent='Speichern';$('name').focus();
+  }
+
+  function accept(data){
+    if(!Array.isArray(data)) throw new Error('Die Datei enthält keine Liste.');
+    const clean=data.map(e=>{
+      if(Array.isArray(e)) return [String(e[0]??'').trim(),Number(e[1]),Number(e[2]),Number(e[3])];
+      if(e&&typeof e==='object'&&typeof e.date==='string'){
+        const p=e.date.split('-').map(Number); return [String(e.name??'').trim(),p[0],p[1],p[2]];
+      }
+      return null;
+    }).filter(e=>e&&e[0]&&validDate(e[1],e[2],e[3]));
+    if(!clean.length&&data.length) throw new Error('Keine gültigen Geburtstage gefunden.');
+    entries=clean;editIndex=-1;render();message(clean.length+' Geburtstage importiert.');
+  }
+
+  $('form').onsubmit=e=>{
+    e.preventDefault(); const item=[$('name').value.trim(),Number($('year').value),Number($('month').value),Number($('day').value)];
+    if(!item[0]||!validDate(item[1],item[2],item[3])){$('formStatus').textContent='Bitte ein gültiges Datum eingeben.';$('formStatus').className='status error';return;}
+    if(editIndex>=0) entries[editIndex]=item; else entries.push(item);
+    editIndex=-1;e.target.reset();$('save').textContent='Hinzufügen';$('formStatus').textContent='';render();
+  };
+
+  $('jsonImport').onchange=async e=>{try{accept(JSON.parse(await e.target.files[0].text()));}catch(err){message(err.message,true);}e.target.value='';};
+  $('csvImport').onchange=async e=>{try{
+    const lines=(await e.target.files[0].text()).split(/\r?\n/).filter(Boolean); const out=[];
+    for(const line of lines){const p=line.split(/[;,]/).map(x=>x.trim());if(/^name$/i.test(p[0]))continue;let d=p[1]?.match(/^(\d{1,2})\.(\d{1,2})\.(\d{4})$/);if(d)out.push([p[0],Number(d[3]),Number(d[2]),Number(d[1])]);else if(p.length>=4)out.push([p[0],Number(p[1]),Number(p[2]),Number(p[3])]);}
+    accept(out);
+  }catch(err){message(err.message,true);}e.target.value='';};
+  $('moduleDownload').onclick=()=>{if(!entries.length){message('Bitte zuerst mindestens einen Geburtstag eintragen.',true);return;}downloadFile('birthday_data.berry',moduleText(),'text/plain');message('birthday_data.berry wurde erstellt.');};
+  $('jsonDownload').onclick=()=>{downloadFile('birthdays.json',JSON.stringify(entries,null,2)+'\n','application/json');message('JSON-Sicherung wurde erstellt.');};
+  $('clear').onclick=()=>{if(confirm('Wirklich alle Geburtstage löschen?')){entries=[];editIndex=-1;render();message('Alle Einträge wurden gelöscht.');}};
+  try{accept(JSON.parse(localStorage.getItem(key)||'[]'));message('');}catch{entries=[];render();}
+})();
+</script>
+</body>
+</html>

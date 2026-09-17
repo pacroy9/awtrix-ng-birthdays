@@ -1,0 +1,9 @@
+# @module birthday_data
+# @desc Example data module for AWTRIX Birthday Editor
+# @version 1.0
+
+var data = module("birthday_data")
+data.entries = [
+  ["EXAMPLE", 2000, 1, 1]
+]
+return data
