@@ -53,9 +53,16 @@
     <div id="empty" class="empty" data-i18n="empty">Noch keine Geburtstage eingetragen.</div>
   </section>
 
-  <section class="card">
+  <section class="card" id="onlineNotice" hidden>
+    <h2 data-i18n="onlineTitle">Direktübertragung benötigt den Offline-Editor</h2>
+    <p data-i18n="onlineText">Der Online-Editor kann Geburtstage verwalten und Dateien exportieren. Für den direkten Zugriff auf deine lokale AWTRIX lade den Offline-Editor herunter und öffne ihn anschließend per Doppelklick. Deine aktuelle Geburtstagsliste wird dabei übernommen.</p>
+    <button type="button" class="primary" id="offlineDownload" data-i18n="downloadOffline">Offline-Editor herunterladen</button>
+    <div id="offlineStatus" class="status" role="status" aria-live="polite"></div>
+  </section>
+
+  <section class="card" id="directTransfer">
     <h2 data-i18n="directTitle">Direkt an AWTRIX senden</h2>
-    <p data-i18n="directIntro">Editor 1.1 · Birthdays 4.6.1 · Lokal im selben Netzwerk. Übertragen ersetzt die komplette Geburtstagsliste auf der Uhr. JSON-Sicherungen bitte aufbewahren.</p>
+    <p data-i18n="directIntro">Offline-Editor 1.2 · Birthdays 4.6.1 · Lokal im selben Netzwerk. Übertragen ersetzt die komplette Geburtstagsliste auf der Uhr. JSON-Sicherungen bitte aufbewahren.</p>
     <div class="toolbar">
       <label><span data-i18n="address">AWTRIX-Adresse</span><input id="deviceHost" placeholder="192.168.10.50"></label>
       <label><span data-i18n="scriptName">App-Skriptname</span><input id="appName" value="geburtstage"></label>
@@ -80,7 +87,8 @@
     de: {
       lead:'Geburtstage lokal verwalten und als fertiges AWTRIX-Modul exportieren – ohne Server oder Cloud.',language:'Sprache',name:'Name',day:'Tag',month:'Monat',year:'Jahr',add:'Hinzufügen',save:'Speichern',
       importJson:'JSON importieren',importCsv:'CSV importieren',downloadModule:'AWTRIX-Modul herunterladen',downloadBackup:'JSON-Sicherung herunterladen',clearAll:'Alle löschen',birthday:'Geburtsdatum',nextAge:'Nächstes Alter',actions:'Aktionen',empty:'Noch keine Geburtstage eingetragen.',
-      directTitle:'Direkt an AWTRIX senden',directIntro:'Editor 1.1 · Birthdays 4.6.1 · Lokal im selben Netzwerk. Übertragen ersetzt die komplette Geburtstagsliste auf der Uhr. JSON-Sicherungen bitte aufbewahren.',address:'AWTRIX-Adresse',scriptName:'App-Skriptname',username:'Benutzer (optional)',password:'Passwort (optional)',
+      onlineTitle:'Direktübertragung benötigt den Offline-Editor',onlineText:'Der Online-Editor kann Geburtstage verwalten und Dateien exportieren. Für den direkten Zugriff auf deine lokale AWTRIX lade den Offline-Editor herunter und öffne ihn anschließend per Doppelklick. Deine aktuelle Geburtstagsliste wird dabei übernommen.',downloadOffline:'Offline-Editor herunterladen',offlineReady:'birthday-editor.html wurde erstellt. Öffne die Datei jetzt per Doppelklick.',offlineError:'Der Offline-Editor konnte nicht erstellt werden: ',
+      directTitle:'Direkt an AWTRIX senden',directIntro:'Offline-Editor 1.2 · Birthdays 4.6.1 · Lokal im selben Netzwerk. Übertragen ersetzt die komplette Geburtstagsliste auf der Uhr. JSON-Sicherungen bitte aufbewahren.',address:'AWTRIX-Adresse',scriptName:'App-Skriptname',username:'Benutzer (optional)',password:'Passwort (optional)',
       credentialsHelp:'Der Skriptname ist der Name unter „Skripte“, nicht der Anzeigename „Birthdays“. Zugangsdaten werden nicht gespeichert. HTTP überträgt sie unverschlüsselt: nur im vertrauenswürdigen Heimnetz verwenden.',backupBefore:'Vor Übertragung Backup herunterladen',testConnection:'Verbindung testen',sendAwtrix:'An AWTRIX übertragen',browserHelp:'Die direkte Übertragung ist browserabhängig. Erlaube bei Nachfrage den Zugriff auf das lokale Netzwerk. Funktioniert sie nicht, keine Schutzfunktionen deaktivieren: „AWTRIX-Modul herunterladen“ wählen und die Datei unter Skripte → Module → birthday_data einfügen.',
       edit:'Bearbeiten',delete:'Löschen',invalidDate:'Bitte ein gültiges Datum eingeben.',notAList:'Die Datei enthält keine Liste.',noValid:'Keine gültigen Geburtstage gefunden.',imported:'{count} Geburtstage importiert.',needEntry:'Bitte zuerst mindestens einen Geburtstag eintragen.',moduleCreated:'birthday_data.berry wurde erstellt.',backupCreated:'JSON-Sicherung wurde erstellt.',clearConfirm:'Wirklich alle Geburtstage löschen?',cleared:'Alle Einträge wurden gelöscht.',
       needAddress:'Bitte die AWTRIX-Adresse eingeben.',badAddress:'Nur Adresse und optional Port eingeben, ohne Pfad oder Zugangsdaten.',badScript:'Bitte den Namen des Geburtstags-App-Skripts eingeben (nicht birthday_data).',rejected:'AWTRIX hat die Anfrage abgelehnt.',saveWarning:'Gespeichert möglicherweise mit Fehler: ',unexpected:'Unerwartete Antwort.',timeout:'Zeitüberschreitung. Bei einer Übertragung ist der Speicherstatus unklar; auf AWTRIX prüfen.',networkError:'Keine lesbare Antwort: Adresse/Netzwerk, Browserfreigabe für lokales Netzwerk, CORS oder HTTPS/HTTP-Sperre prüfen. Bei Übertragung ist der Speicherstatus unklar.',badDevice:'Keine gültige AWTRIX-Geräteantwort.',scriptsOff:'Skriptausführung ist auf AWTRIX ausgeschaltet.',appMismatch:'Dieses App-Skript importiert birthday_data nicht. Bitte Skriptname/Version prüfen.',moduleMismatch:'birthday_data ist kein passendes Datenmodul. Bitte einmalig korrekt installieren.',checking:'Verbindung und installierte Skripte prüfen …',reachable:'AWTRIX {version} erreichbar; App und Modul gefunden. Schreibzugriff/CORS für PUT wird erst beim Übertragen geprüft.',sendConfirm:'{count} Geburtstage an {host} übertragen? Die dortige Liste wird vollständig ersetzt; {app} wird neu geladen.',sending:'Datenmodul übertragen …',readMismatch:'Gespeicherter Modulinhalt stimmt nicht mit der gesendeten Liste überein.',reloading:'Modul geprüft. Geburtstags-App neu laden …',sent:'{count} Geburtstage gespeichert und App neu geladen.',stageCheck:'Prüfung',stageSend:'Modulübertragung',stageRead:'Rücklesen',stageReload:'App neu laden (Datenmodul bereits gespeichert)'
@@ -88,7 +96,8 @@
     en: {
       lead:'Manage birthdays locally and export a ready-to-use AWTRIX module — without a server or cloud.',language:'Language',name:'Name',day:'Day',month:'Month',year:'Year',add:'Add',save:'Save',
       importJson:'Import JSON',importCsv:'Import CSV',downloadModule:'Download AWTRIX module',downloadBackup:'Download JSON backup',clearAll:'Delete all',birthday:'Date of birth',nextAge:'Next age',actions:'Actions',empty:'No birthdays have been added yet.',
-      directTitle:'Send directly to AWTRIX',directIntro:'Editor 1.1 · Birthdays 4.6.1 · Use on the same local network. Sending replaces the complete birthday list on the device. Keep your JSON backups.',address:'AWTRIX address',scriptName:'App script name',username:'Username (optional)',password:'Password (optional)',
+      onlineTitle:'Direct transfer requires the offline editor',onlineText:'The online editor can manage birthdays and export files. To connect directly to your local AWTRIX, download the offline editor and then open it with a double-click. Your current birthday list is included automatically.',downloadOffline:'Download offline editor',offlineReady:'birthday-editor.html was created. Open the file with a double-click.',offlineError:'The offline editor could not be created: ',
+      directTitle:'Send directly to AWTRIX',directIntro:'Offline editor 1.2 · Birthdays 4.6.1 · Use on the same local network. Sending replaces the complete birthday list on the device. Keep your JSON backups.',address:'AWTRIX address',scriptName:'App script name',username:'Username (optional)',password:'Password (optional)',
       credentialsHelp:'The script name is the name shown under “Scripts”, not the display name “Birthdays”. Credentials are not stored. HTTP sends them without encryption, so use this only on a trusted home network.',backupBefore:'Download a backup before sending',testConnection:'Test connection',sendAwtrix:'Send to AWTRIX',browserHelp:'Direct transfer depends on the browser. Allow local-network access if prompted. If it does not work, do not disable browser protections: choose “Download AWTRIX module” and paste the file under Scripts → Modules → birthday_data.',
       edit:'Edit',delete:'Delete',invalidDate:'Please enter a valid date.',notAList:'The file does not contain a list.',noValid:'No valid birthdays were found.',imported:'Imported {count} birthdays.',needEntry:'Please add at least one birthday first.',moduleCreated:'birthday_data.berry was created.',backupCreated:'The JSON backup was created.',clearConfirm:'Delete all birthdays?',cleared:'All entries were deleted.',
       needAddress:'Please enter the AWTRIX address.',badAddress:'Enter only the address and optional port, without a path or credentials.',badScript:'Enter the birthday app script name (not birthday_data).',rejected:'AWTRIX rejected the request.',saveWarning:'The file may have been saved with an error: ',unexpected:'Unexpected response.',timeout:'Request timed out. After a transfer, the save status is uncertain; check AWTRIX.',networkError:'No readable response. Check the address/network, browser permission for local-network access, CORS, or an HTTPS/HTTP block. After a transfer, the save status is uncertain.',badDevice:'AWTRIX did not return a valid device response.',scriptsOff:'Script execution is disabled on AWTRIX.',appMismatch:'This app script does not import birthday_data. Check the script name and version.',moduleMismatch:'birthday_data is not a compatible data module. Install it correctly once.',checking:'Checking the connection and installed scripts …',reachable:'AWTRIX {version} is reachable; the app and module were found. Write access/CORS for PUT is checked only when sending.',sendConfirm:'Send {count} birthdays to {host}? The list there will be completely replaced and {app} will be reloaded.',sending:'Sending data module …',readMismatch:'The stored module does not match the list that was sent.',reloading:'Module verified. Reloading the birthday app …',sent:'Saved {count} birthdays and reloaded the app.',stageCheck:'Check',stageSend:'Module transfer',stageRead:'Read-back check',stageReload:'Reload app (data module already saved)'
@@ -98,6 +107,8 @@
   try{uiLanguage=localStorage.getItem(languageKey);}catch{}
   if(!translations[uiLanguage]) uiLanguage=(navigator.language||'de').toLowerCase().startsWith('de')?'de':'en';
   const t = (key,values={}) => Object.entries(values).reduce((s,[k,v])=>s.replaceAll('{'+k+'}',v),translations[uiLanguage][key]||key);
+  const embeddedEntries = [];
+  const embeddedId = '';
   let entries = [];
   let editIndex = -1;
   const $ = id => document.getElementById(id);
@@ -114,6 +125,20 @@
   const persist = () => localStorage.setItem(key, compact());
   const message = (text,error=false) => { $('status').textContent=text; $('status').className='status'+(error?' error':''); };
   const downloadFile = (name,text,type) => { const blob=new Blob([text],{type});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();URL.revokeObjectURL(a.href); };
+  const onlineMode = location.protocol==='https:';
+  $('onlineNotice').hidden=!onlineMode;
+  $('directTransfer').hidden=onlineMode;
+  $('offlineDownload').onclick=async()=>{
+    try{
+      let source;
+      try{const response=await fetch(location.href,{cache:'no-store'});if(!response.ok)throw new Error('HTTP '+response.status);source=await response.text();}
+      catch{source='<!doctype html>\n'+document.documentElement.outerHTML;}
+      source=source.replace('const embeddedEntries = [];','const embeddedEntries = '+JSON.stringify(entries)+';')
+        .replace("const embeddedId = '';","const embeddedId = '"+Date.now()+"';");
+      downloadFile('birthday-editor.html',source,'text/html');
+      $('offlineStatus').textContent=t('offlineReady');$('offlineStatus').className='status';
+    }catch(e){$('offlineStatus').textContent=t('offlineError')+e.message;$('offlineStatus').className='status error';}
+  };
   const moduleText = () => {
     const rows=entries.map(e=>'  ['+JSON.stringify(e[0])+', '+e[1]+', '+e[2]+', '+e[3]+']').join(',\n');
     return '# @module birthday_data\n# @desc Birthday data generated by AWTRIX Birthday Editor\n# @version 1.0\n\nvar data = module("birthday_data")\ndata.entries = [\n'+rows+'\n]\nreturn data\n';
@@ -238,7 +263,12 @@
   $('jsonDownload').onclick=()=>{downloadFile('birthdays.json',JSON.stringify(entries,null,2)+'\n','application/json');message(t('backupCreated'));};
   $('clear').onclick=()=>{if(confirm(t('clearConfirm'))){entries=[];editIndex=-1;render();message(t('cleared'));}};
   applyLanguage();
-  try{accept(JSON.parse(localStorage.getItem(key)||'[]'));message('');}catch{entries=[];render();}
+  try{
+    const seedKey='awtrix-birthday-embedded-id';
+    if(embeddedId&&localStorage.getItem(seedKey)!==embeddedId){accept(embeddedEntries);localStorage.setItem(seedKey,embeddedId);}
+    else accept(JSON.parse(localStorage.getItem(key)||'[]'));
+    message('');
+  }catch{entries=[];render();}
 })();
 </script>
 </body>

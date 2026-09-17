@@ -14,19 +14,38 @@ The editor runs entirely inside the browser. Names and birthdays are not uploade
 - German and English settings
 - bilingual browser editor (German/English) with JSON and CSV import
 - export of a ready-to-use `birthday_data` module
-- optional, browser-dependent direct transfer to an AWTRIX NG in the local network
+- downloadable offline editor for direct transfer to an AWTRIX NG in the local network
 
 ## Installation
 
-### 1. Create the birthday data module
+### 1. Add or import birthdays
 
 Open the [AWTRIX Birthday Editor](https://pacroy9.github.io/awtrix-ng-birthdays/).
 
-Select **Deutsch** or **English** in the top-right corner. Add the birthdays manually or import a compatible JSON or CSV file. Then click **AWTRIX-Modul herunterladen** / **Download AWTRIX module**.
+Select **Deutsch** or **English** in the top-right corner. Add the birthdays manually or import a compatible JSON or CSV file. The editor stores the working list only in the current browser.
+
+Now choose one of the following installation methods.
+
+### 2A. Direct transfer with the offline editor (recommended)
+
+The hosted editor cannot reliably connect from its secure HTTPS page to an AWTRIX device using local HTTP. Therefore direct transfer is intentionally available only in the downloaded offline editor.
+
+1. In the online editor, click **Offline-Editor herunterladen** / **Download offline editor**.
+2. Open the downloaded `birthday-editor.html` with a double-click. The current birthday list is included automatically.
+3. Enter the local AWTRIX address, for example `192.168.20.99`.
+4. Enter the app script name shown under **Scripts**, for example `geburtstage`. Do not enter the display name `Birthdays` or the module name `birthday_data`.
+5. Click **Verbindung testen** / **Test connection**.
+6. Click **An AWTRIX übertragen** / **Send to AWTRIX**.
+
+The transfer replaces the complete `birthday_data` module and reloads the birthday app. Keep a JSON backup before making larger changes. If the browser still blocks local access, use the manual method below. Do not disable browser security features.
+
+### 2B. Manual module installation
+
+In the online or offline editor, click **AWTRIX-Modul herunterladen** / **Download AWTRIX module**.
 
 The editor creates `birthday_data.berry`.
 
-### 2. Install the module
+Install or replace the module:
 
 1. Open the AWTRIX NG web interface.
 2. Open **Scripts**.
@@ -54,9 +73,7 @@ Open **Apps**, locate **Birthdays**, and use the gear button to configure:
 
 ## Updating birthdays
 
-Open the editor again, import the previously saved JSON backup if necessary, edit the list and export or transfer a new `birthday_data.berry` module. Reloading the main script makes the changed list available immediately.
-
-Direct transfer from the hosted HTTPS editor to a local HTTP device depends on browser support and permission to access the local network. Grant that permission when prompted. If the connection is blocked, do not disable browser security features; download `birthday_data.berry` and update the module manually instead.
+Open the online editor again and import the previously saved JSON backup if necessary. Edit the list and either download a fresh offline editor for direct transfer or export a new `birthday_data.berry` for manual installation. Direct transfer reloads the main app automatically; after a manual module update, reload or save the main app script once.
 
 ## Data format
 
@@ -76,11 +93,11 @@ Example:
 
 - `Birthdays.berry` — AWTRIX NG application script
 - `birthday_data.example.berry` — non-personal example module
-- `index.html` — browser editor published with GitHub Pages
+- `index.html` — online editor and downloadable offline editor in one file
 
 ## Privacy
 
-The editor stores its working list in the browser's local storage. Direct transfer communicates only with the AWTRIX address entered by the user. No birthday data is sent to this repository or to the editor host.
+The editor stores its working list in the browser's local storage. When the offline editor is downloaded, the current list is embedded in that local HTML file. Direct transfer communicates only with the AWTRIX address entered by the user. No birthday data is uploaded to this repository or to the editor host.
 
 ## License
 
