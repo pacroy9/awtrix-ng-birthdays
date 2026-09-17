@@ -12,9 +12,9 @@ The editor runs entirely inside the browser. Names and birthdays are not uploade
 - animated seven-segment countdown bar
 - optional rainbow animation on the birthday
 - German and English settings
-- browser editor with JSON and CSV import
+- bilingual browser editor (German/English) with JSON and CSV import
 - export of a ready-to-use `birthday_data` module
-- optional direct transfer to an AWTRIX NG in the local network
+- optional, browser-dependent direct transfer to an AWTRIX NG in the local network
 
 ## Installation
 
@@ -22,7 +22,7 @@ The editor runs entirely inside the browser. Names and birthdays are not uploade
 
 Open the [AWTRIX Birthday Editor](https://pacroy9.github.io/awtrix-ng-birthdays/).
 
-Add the birthdays manually or import a compatible JSON or CSV file. Then click **AWTRIX-Modul herunterladen**.
+Select **Deutsch** or **English** in the top-right corner. Add the birthdays manually or import a compatible JSON or CSV file. Then click **AWTRIX-Modul herunterladen** / **Download AWTRIX module**.
 
 The editor creates `birthday_data.berry`.
 
@@ -55,6 +55,8 @@ Open **Apps**, locate **Birthdays**, and use the gear button to configure:
 ## Updating birthdays
 
 Open the editor again, import the previously saved JSON backup if necessary, edit the list and export or transfer a new `birthday_data.berry` module. Reloading the main script makes the changed list available immediately.
+
+Direct transfer from the hosted HTTPS editor to a local HTTP device depends on browser support and permission to access the local network. Grant that permission when prompted. If the connection is blocked, do not disable browser security features; download `birthday_data.berry` and update the module manually instead.
 
 ## Data format
 
