@@ -1,21 +1,20 @@
 # @name    Birthdays
 # @desc    Birthday cake, upcoming age, persistent countdown and name
 # @author  Roy
-# @version 4.6.2
+# @version 4.6.3
 # Uses a configurable local icon with a built-in cake fallback.
-# @config  icon_id     text   "Icon-ID" default="7020" help="Lokal installiertes 8x8-Icon ohne Dateiendung. Leer = gezeichnete Torte."
-# @config  sparkle     bool   "Lichtpunkte beim Auftakt" default=true
-# @config  language    select "Sprache" default=de options=de,en
-# @config  text_color  color  "Standardfarbe" default=#FF66AA
-# @config  rainbow     bool   "Regenbogen am Geburtstag" default=true
-# @config  days_before number "Countdown vorher" default=7 min=1 max=30 unit=Tage
-# @config  leap_day    select "29. Februar in Normaljahren" default=feb28 options=feb28,mar1
+# @config  icon_id     text   "Icon ID" default="7020" help="Local 8x8 icon ID or name without extension. Leave empty for the built-in cake."
+# @config  sparkle     bool   "Sparkles during the intro" default=true
+# @config  text_color  color  "Default text color" default=#FF66AA
+# @config  rainbow     bool   "Rainbow on birthdays" default=true
+# @config  days_before number "Countdown window" default=7 min=1 max=30 unit=days
+# @config  leap_day    select "February 29 in non-leap years" default=feb28 options=feb28,mar1 help="feb28 = February 28; mar1 = March 1."
 
 import birthday_data
 import string
 
 class Birthdays
-  var entries, language, color, rainbow, days_before, leap_day
+  var entries, color, rainbow, days_before, leap_day
   var label, last_date, days_left, birthday_today
   var age_label, shown_at, bar_color, segments, lit_segments, name_ms
   var sparkle, icon_id
@@ -25,7 +24,6 @@ class Birthdays
     self.icon_id = store.get("icon_id")
     if self.icon_id == nil self.icon_id = "7020" end
     self.icon_id = str(self.icon_id)
-    self.language = store.get("language")
     self.color = store.get("text_color")
     if self.color == nil self.color = settings.get("textColor") end
     self.rainbow = store.get("rainbow")

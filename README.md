@@ -11,7 +11,7 @@ The editor runs entirely inside the browser. Names and birthdays are not uploade
 - configurable local 8×8 icon with a built-in birthday cake fallback drawing
 - animated seven-segment countdown bar
 - optional rainbow animation on the birthday
-- German and English settings
+- English app settings and script comments
 - bilingual browser editor (German/English) with JSON and CSV import
 - export of a ready-to-use `birthday_data` module
 - downloadable offline editor for direct transfer to an AWTRIX NG in the local network
@@ -64,7 +64,6 @@ Install `Birthdays.berry` from this repository as an AWTRIX NG script. When publ
 
 Open **Apps**, locate **Birthdays**, and use the gear button to configure:
 
-- language
 - icon ID (default: `7020`)
 - standard text color
 - rainbow text on the birthday
@@ -72,13 +71,15 @@ Open **Apps**, locate **Birthdays**, and use the gear button to configure:
 - handling of 29 February in non-leap years
 - decorative sparkle animation
 
+App setting labels and help text are in English. AWTRIX reads these labels from the script header and does not support switching them through an app setting. Version **4.6.3** removes the previously ineffective language selector. The birthday editor has its own independent **Deutsch / English** language switch.
+
 ### Choosing an icon
 
-In **Apps → Birthdays → ⚙ → Icon-ID**, enter the ID or name of an **8×8 icon already installed on your AWTRIX**, without its file extension (for example `7020` for `7020.gif`). Save the settings to apply the change. The script does not download icons or require an icon upload to awtrix.de.
+In **Apps → Birthdays → ⚙ → Icon ID**, enter the ID or name of an **8×8 icon already installed on your AWTRIX**, without its file extension (for example `7020` for `7020.gif`). Save the settings to apply the change. The script does not download icons or require an icon upload to awtrix.de.
 
 `7020` remains the default for existing installations. You can choose any other locally installed 8×8 icon. Leave the field empty to always use the built-in cake drawing. If the chosen icon is missing or cannot be drawn, the built-in cake is used automatically, including during scrolling names. Icon `7020` is therefore optional.
 
-When updating an existing installation, replace the contents of the main app script with `Birthdays.berry` version **4.6.2** and save it. Then open its app settings to choose the icon. Your `birthday_data` module does not need to change.
+When updating an existing installation, replace the contents of the main app script with `Birthdays.berry` version **4.6.3** and save it. Then open its app settings to choose the icon. Your `birthday_data` module does not need to change. Existing icon, color, countdown, sparkle, rainbow and leap-day settings retain their keys and values; only the unused language setting is removed.
 
 ## Updating birthdays
 
