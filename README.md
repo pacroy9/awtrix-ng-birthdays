@@ -75,6 +75,10 @@ App setting labels and help text are in English. AWTRIX reads these labels from 
 
 ### Choosing an icon
 
+The animated **Birthdaycake** icon by **Mumpitz** is available from the [AWTRIX Hub](https://awtrix.de/icons/birthdaycake-2). Install it from the Hub, then set **Icon ID** to **`birthdaycake-2`** and save. Its Hub name differs from the older default `7020`.
+
+For manual installation, download [`icons/birthdaycake-2.gif`](icons/birthdaycake-2.gif) from this repository, upload it through the **Icons** tab of your AWTRIX web interface, and keep the file name `birthdaycake-2.gif`. Then set **Icon ID** to `birthdaycake-2` (without `.gif`). See [icon source and attribution](icons/README.md).
+
 In **Apps → Birthdays → ⚙ → Icon ID**, enter the ID or name of an **8×8 icon already installed on your AWTRIX**, without its file extension (for example `7020` for `7020.gif`). Save the settings to apply the change. The script does not download icons or require an icon upload to awtrix.de.
 
 `7020` remains the default for existing installations. You can choose any other locally installed 8×8 icon. Leave the field empty to always use the built-in cake drawing. If the chosen icon is missing or cannot be drawn, the built-in cake is used automatically, including during scrolling names. Icon `7020` is therefore optional.
@@ -104,6 +108,8 @@ Example:
 - `Birthdays.berry` — AWTRIX NG application script
 - `birthday_data.example.berry` — non-personal example module
 - `index.html` — online editor and downloadable offline editor in one file
+- `icons/birthdaycake-2.gif` — optional animated 8×8 cake icon from the AWTRIX Hub
+- `icons/README.md` — icon source and attribution
 
 ## Privacy
 
@@ -111,4 +117,4 @@ The editor stores its working list in the browser's local storage. When the offl
 
 ## License
 
-MIT
+App and editor source code: MIT. The bundled third-party icon is credited separately in [icons/README.md](icons/README.md); its inclusion does not relicense the artwork under MIT.
