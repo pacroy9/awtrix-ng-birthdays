@@ -64,7 +64,7 @@ Install `Birthdays.berry` from this repository as an AWTRIX NG script. When publ
 
 Open **Apps**, locate **Birthdays**, and use the gear button to configure:
 
-- icon ID (default: `7020`)
+- icon ID (default: `birthdaycake-2`)
 - standard text color
 - rainbow text on the birthday
 - number of countdown days
@@ -75,15 +75,15 @@ App setting labels and help text are in English. AWTRIX reads these labels from 
 
 ### Choosing an icon
 
-The animated **Birthdaycake** icon by **Mumpitz** is available from the [AWTRIX Hub](https://awtrix.de/icons/birthdaycake-2). Install it from the Hub, then set **Icon ID** to **`birthdaycake-2`** and save. Its Hub name differs from the older default `7020`.
+Since version **4.6.4**, the default icon is the animated **Birthdaycake** icon by **Mumpitz**, available from the [AWTRIX Hub](https://awtrix.de/icons/birthdaycake-2). The script declares `# @icons birthdaycake-2`, so the Hub can install it with the app when your AWTRIX Hub connection is configured. You can also install it directly from the icon's Hub page.
 
 For manual installation, download [`icons/birthdaycake-2.gif`](icons/birthdaycake-2.gif) from this repository, upload it through the **Icons** tab of your AWTRIX web interface, and keep the file name `birthdaycake-2.gif`. Then set **Icon ID** to `birthdaycake-2` (without `.gif`). See [icon source and attribution](icons/README.md).
 
-In **Apps → Birthdays → ⚙ → Icon ID**, enter the ID or name of an **8×8 icon already installed on your AWTRIX**, without its file extension (for example `7020` for `7020.gif`). Save the settings to apply the change. The script does not download icons or require an icon upload to awtrix.de.
+In **Apps → Birthdays → ⚙ → Icon ID**, enter the ID or name of an **8×8 icon already installed on your AWTRIX**, without its file extension (for example `birthdaycake-2` for `birthdaycake-2.gif`). Save the settings to apply the change. Choosing a different ID does not download that icon; install your chosen icon first.
 
-`7020` remains the default for existing installations. You can choose any other locally installed 8×8 icon. Leave the field empty to always use the built-in cake drawing. If the chosen icon is missing or cannot be drawn, the built-in cake is used automatically, including during scrolling names. Icon `7020` is therefore optional.
+New installations default to `birthdaycake-2`. Updates keep saved settings, including the older value `7020` or a custom icon ID. To switch an existing installation, set **Icon ID** to **`birthdaycake-2`** and save. Leave the field empty to always use the built-in cake drawing. If the chosen icon is missing or cannot be drawn, the built-in cake is used automatically, including during scrolling names.
 
-When updating an existing installation, replace the contents of the main app script with `Birthdays.berry` version **4.6.3** and save it. Then open its app settings to choose the icon. Your `birthday_data` module does not need to change. Existing icon, color, countdown, sparkle, rainbow and leap-day settings retain their keys and values; only the unused language setting is removed.
+When updating an existing installation, replace the contents of the main app script with `Birthdays.berry` version **4.6.4** and save it, or update it through the Hub. Then open its app settings to choose the icon. Your `birthday_data` module does not need to change. Existing icon, color, countdown, sparkle, rainbow and leap-day settings retain their keys and values; the unused language setting removed in 4.6.3 stays removed.
 
 ## Updating birthdays
 

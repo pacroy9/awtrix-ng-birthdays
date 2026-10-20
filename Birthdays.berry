@@ -1,9 +1,10 @@
 # @name    Birthdays
 # @desc    Birthday cake, upcoming age, persistent countdown and name
 # @author  Roy
-# @version 4.6.3
-# Uses a configurable local icon with a built-in cake fallback.
-# @config  icon_id     text   "Icon ID" default="7020" help="Local 8x8 icon ID or name without extension. Leave empty for the built-in cake."
+# @version 4.6.4
+# @icons   birthdaycake-2
+# Uses the Birthdaycake Hub icon by Mumpitz, with a configurable local icon and built-in cake fallback.
+# @config  icon_id     text   "Icon ID" default="birthdaycake-2" help="Local 8x8 icon ID or name without extension. Leave empty for the built-in cake."
 # @config  sparkle     bool   "Sparkles during the intro" default=true
 # @config  text_color  color  "Default text color" default=#FF66AA
 # @config  rainbow     bool   "Rainbow on birthdays" default=true
@@ -22,7 +23,7 @@ class Birthdays
   def init()
     self.entries = birthday_data.entries
     self.icon_id = store.get("icon_id")
-    if self.icon_id == nil self.icon_id = "7020" end
+    if self.icon_id == nil self.icon_id = "birthdaycake-2" end
     self.icon_id = str(self.icon_id)
     self.color = store.get("text_color")
     if self.color == nil self.color = settings.get("textColor") end
